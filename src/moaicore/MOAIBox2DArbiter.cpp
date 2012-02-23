@@ -7,6 +7,7 @@
 #include <moaicore/MOAIBox2DFixture.h>
 #include <moaicore/MOAILogMessages.h>
 
+
 SUPPRESS_EMPTY_FILE_WARNING
 #if USE_BOX2D
 
@@ -94,6 +95,11 @@ void MOAIBox2DArbiter::BeginContact ( b2Contact* contact ) {
 	MOAIBox2DFixture* moaiFixtureA = ( MOAIBox2DFixture* )fixtureA->GetUserData ();
 	MOAIBox2DFixture* moaiFixtureB = ( MOAIBox2DFixture* )fixtureB->GetUserData ();
 	
+	b2WorldManifold* worldManifold = new b2WorldManifold ();
+	contact->GetWorldManifold ( worldManifold );
+	this->mContactNormal = worldManifold->normal;
+	delete worldManifold;
+
 	moaiFixtureA->HandleCollision ( BEGIN, moaiFixtureB, this );
 	moaiFixtureB->HandleCollision ( BEGIN, moaiFixtureA, this );
 }
