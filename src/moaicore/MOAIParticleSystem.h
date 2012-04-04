@@ -8,7 +8,7 @@
 #include <moaicore/MOAIAction.h>
 #include <moaicore/MOAILua.h>
 #include <moaicore/MOAIParticle.h>
-#include <moaicore/MOAIProp2D.h>
+#include <moaicore/MOAIProp.h>
 
 class MOAIDeck;
 class MOAIParticleScript;
@@ -21,7 +21,7 @@ class MOAIParticleState;
 	@text	Particle system.
 */
 class MOAIParticleSystem :
-	public MOAIProp2D,
+	public MOAIProp,
 	public MOAIAction {
 private:
 
@@ -44,6 +44,7 @@ private:
 	static int		_capParticles		( lua_State* L );
 	static int		_capSprites			( lua_State* L );
 	static int		_clearSprites		( lua_State* L );
+	static int		_isIdle				( lua_State* L );
 	static int		_getState			( lua_State* L );
 	static int		_pushParticle		( lua_State* L );
 	static int		_pushSprite			( lua_State* L );
@@ -74,7 +75,7 @@ public:
 
 	//----------------------------------------------------------------//
 	void			Draw					( int subPrimID, bool reload );
-	u32				GetLocalFrame			( USRect& frame );
+	u32				GetDeckBounds			( USBox& bounds );
 	bool			IsDone					();
 					MOAIParticleSystem		();
 					~MOAIParticleSystem		();

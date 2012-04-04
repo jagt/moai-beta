@@ -35,9 +35,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hexdump", "hexdump\hexdump.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jansson", "jansson\jansson.vcproj", "{52496C82-2EDB-4649-8509-451891F6A3DE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcares", "libcares\libcares.vcproj", "{61DF1CB3-8AAE-4FDD-8471-297FE355165C}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcrypto", "libcrypto\libcrypto.vcproj", "{956FFE71-66F4-457C-8C88-9F075E4FDE27}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcurl", "libcurl\libcurl.vcproj", "{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjpg", "libjpg\libjpg.vcproj", "{1F65FE7F-80D7-4380-BDD3-2546D7C2DFF0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libogg", "libogg\libogg.vcproj", "{3986E679-6E11-4B7A-A00D-9669DEDBBC1E}"
 EndProject
@@ -111,6 +115,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "moaicore", "moaicore\moaico
 		{52496C82-2EDB-4649-8509-451891F6A3DE} = {52496C82-2EDB-4649-8509-451891F6A3DE}
 		{E4BFD291-B8CF-4D71-9E86-658CD227428D} = {E4BFD291-B8CF-4D71-9E86-658CD227428D}
 		{D0F1C892-57F4-4758-A2EE-BFB58DB20987} = {D0F1C892-57F4-4758-A2EE-BFB58DB20987}
+		{61DF1CB3-8AAE-4FDD-8471-297FE355165C} = {61DF1CB3-8AAE-4FDD-8471-297FE355165C}
 		{860D46BC-EC6B-43C3-B335-3479F096FB1B} = {860D46BC-EC6B-43C3-B335-3479F096FB1B}
 		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49} = {41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}
 		{562B9EEF-2A2E-46E1-8A28-550C86CDF9F6} = {562B9EEF-2A2E-46E1-8A28-550C86CDF9F6}
@@ -120,6 +125,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite", "sqlite\sqlite.vcproj", "{A9935050-2E54-4674-80F8-CFC45A2C106A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "tinyxml\tinyxml.vcproj", "{991EBC54-28FF-44A1-863E-E70617782825}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tlsf", "tlsf\tlsf.vcproj", "{1E78302D-CF63-4922-8113-DCCD24F94087}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "untz", "untz\untz.vcproj", "{76508AAD-7030-4FD2-9D05-99184AF2BAF5}"
 EndProject
@@ -132,12 +139,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "visualinfo", "visualinfo\vi
 		{A92A8C1C-C62D-43F8-98A9-C418A786BE56} = {A92A8C1C-C62D-43F8-98A9-C418A786BE56}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcproj", "{E6C55A0C-B5B7-4963-8F77-19F1624B9F47}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zipfs", "zipfs\zipfs.vcproj", "{A92A8C1C-C62D-43F8-98A9-C418A786BE56}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1E78302D-CF63-4922-8113-DCCD24F94087} = {1E78302D-CF63-4922-8113-DCCD24F94087}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcproj", "{E6C55A0C-B5B7-4963-8F77-19F1624B9F47}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "work", "work\work.vcproj", "{A130115C-B50F-436E-8C90-4243E310DC9C}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -146,10 +153,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "work", "work\work.vcproj", 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "moaiext-debugger", "moaiext-debugger\moaiext-debugger.vcproj", "{397A08C8-EF50-470A-9100-5C78FC0F332D}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjpg", "libjpg\libjpg.vcproj", "{1F65FE7F-80D7-4380-BDD3-2546D7C2DFF0}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tlsf", "tlsf\tlsf.vcproj", "{1E78302D-CF63-4922-8113-DCCD24F94087}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -241,12 +244,10 @@ Global
 		{956FFE71-66F4-457C-8C88-9F075E4FDE27}.Release|x64.Build.0 = Release|x64
 		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}.Debug|Win32.ActiveCfg = Debug|Win32
 		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}.Debug|Win32.Build.0 = Debug|Win32
-		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}.Debug|x64.ActiveCfg = Debug|x64
-		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}.Debug|x64.Build.0 = Debug|x64
+		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}.Debug|x64.ActiveCfg = Debug|Win32
 		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}.Release|Win32.ActiveCfg = Release|Win32
 		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}.Release|Win32.Build.0 = Release|Win32
-		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}.Release|x64.ActiveCfg = Release|x64
-		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}.Release|x64.Build.0 = Release|x64
+		{41BEB1CB-88C0-4C0F-B24E-F5871CF9EE49}.Release|x64.ActiveCfg = Release|Win32
 		{3986E679-6E11-4B7A-A00D-9669DEDBBC1E}.Debug|Win32.ActiveCfg = Debug|Win32
 		{3986E679-6E11-4B7A-A00D-9669DEDBBC1E}.Debug|Win32.Build.0 = Debug|Win32
 		{3986E679-6E11-4B7A-A00D-9669DEDBBC1E}.Debug|x64.ActiveCfg = Debug|Win32
@@ -411,6 +412,12 @@ Global
 		{1E78302D-CF63-4922-8113-DCCD24F94087}.Release|Win32.ActiveCfg = Release|Win32
 		{1E78302D-CF63-4922-8113-DCCD24F94087}.Release|Win32.Build.0 = Release|Win32
 		{1E78302D-CF63-4922-8113-DCCD24F94087}.Release|x64.ActiveCfg = Release|Win32
+		{61DF1CB3-8AAE-4FDD-8471-297FE355165C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{61DF1CB3-8AAE-4FDD-8471-297FE355165C}.Debug|Win32.Build.0 = Debug|Win32
+		{61DF1CB3-8AAE-4FDD-8471-297FE355165C}.Debug|x64.ActiveCfg = Debug|Win32
+		{61DF1CB3-8AAE-4FDD-8471-297FE355165C}.Release|Win32.ActiveCfg = Release|Win32
+		{61DF1CB3-8AAE-4FDD-8471-297FE355165C}.Release|Win32.Build.0 = Release|Win32
+		{61DF1CB3-8AAE-4FDD-8471-297FE355165C}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -451,10 +458,11 @@ Global
 		{A92A8C1C-C62D-43F8-98A9-C418A786BE56} = {9F8AD78A-95B2-4E97-8070-087F82AA848D}
 		{1F65FE7F-80D7-4380-BDD3-2546D7C2DFF0} = {9F8AD78A-95B2-4E97-8070-087F82AA848D}
 		{1E78302D-CF63-4922-8113-DCCD24F94087} = {9F8AD78A-95B2-4E97-8070-087F82AA848D}
+		{61DF1CB3-8AAE-4FDD-8471-297FE355165C} = {9F8AD78A-95B2-4E97-8070-087F82AA848D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaPersistentConfig = Debug|Win32
-		AMDCaPersistentStartup = moai (Utilities\moai)
 		AMDCaProjectFile = C:\Documents and Settings\Patrick\My Documents\git\moai\vs2008\CodeAnalyst\moai-open.caw
+		AMDCaPersistentStartup = moai (Utilities\moai)
+		AMDCaPersistentConfig = Debug|Win32
 	EndGlobalSection
 EndGlobal

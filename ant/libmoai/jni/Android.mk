@@ -8,6 +8,7 @@
 	include $(CLEAR_VARS)
 
 	include ArmModeDefined.mk
+	include OptionalComponentsDefined.mk
 	
 	#----------------------------------------------------------------#
 	# set moai root
@@ -24,6 +25,7 @@
 	LOCAL_MODULE 	:= moai
 	LOCAL_ARM_MODE 	:= $(MY_ARM_MODE)
 	LOCAL_LDLIBS 	:= -llog -lGLESv1_CM -lGLESv2 -lz crypto/libs/$(TARGET_ARCH_ABI)/libcrypto.a ../obj/local/$(TARGET_ARCH_ABI)/libogg.a
+	LOCAL_CFLAGS	:= $(DISABLE_TAPJOY) $(DISABLE_NOTIFICATIONS) $(DISABLE_BILLING) $(DISABLE_CRITTERCISM) $(DISABLE_ADCOLONY)
 	
 #----------------------------------------------------------------#
 # header search paths
@@ -46,6 +48,8 @@
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/box2d-2.2.1/Box2D/Dynamics
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/box2d-2.2.1/Box2D/Dynamics/Contacts
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/box2d-2.2.1/Box2D/Dynamics/Joints
+	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/c-ares-1.7.5
+	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/c-ares-1.7.5/include-android
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/chipmunk-5.3.4/include
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/chipmunk-5.3.4/include/chipmunk
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/chipmunk-5.3.4/include/chipmunk/constraints
@@ -73,6 +77,7 @@
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/luasocket-2.0.2/src
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/luasql-2.2.0/src
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/openssl-1.0.0d/include-android
+	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/ooid-0.99
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/sqlite-3.6.16
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/tinyxml
 	MY_HEADER_SEARCH_PATHS += $(MY_MOAI_ROOT)/3rdparty/tlsf-2.0
@@ -85,18 +90,14 @@
 #----------------------------------------------------------------#
 
 	LOCAL_C_INCLUDES 	:= $(MY_HEADER_SEARCH_PATHS)
-	LOCAL_SRC_FILES 	+= src/packaged-moai.cpp
-	LOCAL_SRC_FILES 	+= $(MY_MOAI_ROOT)/src/aku/pch.cpp
-	LOCAL_SRC_FILES 	+= $(MY_MOAI_ROOT)/src/aku/AKU.cpp
-	LOCAL_SRC_FILES 	+= $(MY_MOAI_ROOT)/src/aku/AKU-luaext.cpp
-	LOCAL_SRC_FILES 	+= $(MY_MOAI_ROOT)/src/aku/AKU-untz.cpp
+	LOCAL_SRC_FILES 	+= src/moai.cpp
 
 #----------------------------------------------------------------#
 # libraries
 #----------------------------------------------------------------#
 
+	LOCAL_STATIC_LIBRARIES += libaku
 	LOCAL_STATIC_LIBRARIES += libmoaicore
-	LOCAL_STATIC_LIBRARIES += libuslsext
 	LOCAL_STATIC_LIBRARIES += libuslscore
 
 	LOCAL_STATIC_LIBRARIES += libmoaiext-android
@@ -127,6 +128,7 @@
 #----------------------------------------------------------------#
 
 	include box2d/Android.mk
+	include c-ares/Android.mk
 	include chipmunk/Android.mk
 	include contrib/Android.mk
 	include curl/Android.mk
@@ -146,5 +148,6 @@
 	include vorbis/Android.mk
 	include zipfs/Android.mk
 
+	include aku/Android.mk
 	include moaicore/Android.mk
 	include uslscore/Android.mk

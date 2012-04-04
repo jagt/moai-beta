@@ -8,7 +8,7 @@
 #include <moaicore/MOAINodeMgr.h>
 
 // TODO: remove when setParent is removed
-#include <moaicore/MOAIProp2D.h>
+#include <moaicore/MOAIProp.h>
 
 //================================================================//
 // MOAIDepLink
@@ -30,6 +30,9 @@ private:
 	u32							mSourceAttrID;
 	u32							mDestAttrID;
 
+	// cached flag indicating it's safe to pull from source to dest (attribute flags match)
+	bool						 mPullable;
+
 	//----------------------------------------------------------------//
 	MOAIDepLink () :
 		mSourceNode ( 0 ),
@@ -37,11 +40,20 @@ private:
 		mNextInSource ( 0 ),
 		mNextInDest ( 0 ),
 		mSourceAttrID ( MOAINode::NULL_ATTR ),
-		mDestAttrID ( MOAINode::NULL_ATTR ) {
+		mDestAttrID ( MOAINode::NULL_ATTR ),
+		mPullable ( false ) {
 	}
 
 	//----------------------------------------------------------------//
 	~MOAIDepLink () {
+	}
+
+	//----------------------------------------------------------------//
+	void Update () {
+		this->mPullable =
+			( mSourceAttrID & MOAINode::ATTR_READ ) &&
+			( mDestAttrID & MOAINode::ATTR_WRITE ) &&
+			( mSourceAttrID != MOAINode::NULL_ATTR );
 	}
 };
 
@@ -184,7 +196,7 @@ int MOAINode::_moveAttr ( lua_State* L ) {
 	if ( self->CheckAttrExists ( attrID )) {
 	
 		action->SetLink ( 0, self, attrID, value, mode );
-		action->SetLength ( length );
+		action->SetSpan ( length );
 		action->Start ();
 		action->PushLuaUserdata ( state );
 
@@ -244,7 +256,7 @@ int MOAINode::_seekAttr ( lua_State* L ) {
 		
 		action->SetLink ( 0, self, attrID, value - getter.GetValue (), mode );
 		
-		action->SetLength ( delay );
+		action->SetSpan ( delay );
 		action->Start ();
 		action->PushLuaUserdata ( state );
 
@@ -370,7 +382,7 @@ void MOAINode::ActivateOnLink ( MOAINode& srcNode ) {
 		else {
 			MOAINodeMgr& depNodeMgr = MOAINodeMgr::Get ();
 			
-			if ( srcNode.IsNodeUpstream ( this )) {
+			if ( srcNode.IsNodeUpstream ( this ) && this->mState != STATE_UPDATING ) {
 				
 				depNodeMgr.Remove ( *this );
 				depNodeMgr.InsertAfter ( srcNode, *this );
@@ -433,7 +445,6 @@ void MOAINode::ClearNodeLink ( MOAINode& srcNode ) {
 		if (( link->mDestAttrID == NULL_ATTR ) && ( link->mSourceNode == &srcNode )) {
 			link->mSourceNode->RemoveDepLink ( *link );
 			delete link;
-			this->ScheduleUpdate ();
 		}
 		else {
 			link->mNextInDest = this->mPullLinks;
@@ -447,8 +458,7 @@ void MOAINode::DepNodeUpdate () {
 	
 	if ( this->mState == STATE_SCHEDULED ) {
 	
-		
-	
+		this->mState = STATE_UPDATING;
 		this->PullAttributes ();
 		this->OnDepNodeUpdate ();
 		this->ExtendUpdate ();
@@ -525,7 +535,7 @@ MOAINode::MOAINode () :
 
 //----------------------------------------------------------------//
 MOAINode::~MOAINode () {
-
+	
 	while ( this->mPullLinks ) {
 		MOAIDepLink* link = this->mPullLinks;
 		this->mPullLinks = link->mNextInDest;
@@ -553,11 +563,12 @@ void MOAINode::PullAttributes () {
 	MOAIDepLink* link = this->mPullLinks;	
 	for ( ; link ; link = link->mNextInDest ) {
 		
-		if ( link->mSourceNode->mState == STATE_SCHEDULED ) {
-			link->mSourceNode->DepNodeUpdate ();
-		}
+		if ( link->mPullable ) {
 		
-		if (( link->mSourceAttrID & ATTR_READ ) && ( link->mDestAttrID & ATTR_WRITE ) && ( link->mSourceAttrID != NULL_ATTR )) {
+			if ( link->mSourceNode->mState == STATE_SCHEDULED ) {
+				link->mSourceNode->DepNodeUpdate ();
+			}
+			
 			link->mSourceNode->ApplyAttrOp ( link->mSourceAttrID, attrOp, MOAIAttrOp::GET );
 			this->ApplyAttrOp ( link->mDestAttrID, attrOp, MOAIAttrOp::SET );
 		}
@@ -615,6 +626,7 @@ void MOAINode::RemoveDepLink ( MOAIDepLink& link ) {
 		}
 		link.mNextInDest = 0;
 	}
+	link.Update ();
 }
 
 //----------------------------------------------------------------//
@@ -641,20 +653,26 @@ void MOAINode::RegisterLuaFuncs ( MOAILuaState& state ) {
 //----------------------------------------------------------------//
 void MOAINode::ScheduleUpdate () {
 	
-	// add to the list if not already in it
-	if ( this->mState == STATE_IDLE ) {
-		this->mState = STATE_SCHEDULED;
-
-		// push us at the end of the list
-		MOAINodeMgr::Get ().PushBack ( *this );
+	if ( this->mState != STATE_UPDATING ) {
+	
+		if ( MOAINodeMgr::IsValid ()) {
 		
-		// activate source nodes
-		MOAIDepLink* link = this->mPullLinks;
-		for ( ; link ; link = link->mNextInDest ) {
-			link->mSourceNode->Activate ( *this );
+			// add to the list if not already in it
+			if ( this->mState == STATE_IDLE ) {
+				this->mState = STATE_SCHEDULED;
+
+				// push us at the end of the list
+				MOAINodeMgr::Get ().PushBack ( *this );
+				
+				// activate source nodes
+				MOAIDepLink* link = this->mPullLinks;
+				for ( ; link ; link = link->mNextInDest ) {
+					link->mSourceNode->Activate ( *this );
+				}
+			}
+			this->mState = STATE_SCHEDULED;
 		}
 	}
-	this->mState = STATE_SCHEDULED;
 }
 
 //----------------------------------------------------------------//
@@ -667,6 +685,7 @@ void MOAINode::SetAttrLink ( int attrID, MOAINode* srcNode, int srcAttrID ) {
 	}
 	
 	if (( !srcNode ) || ( srcAttrID == ( int )NULL_ATTR )) {
+		attrID |= this->GetAttrFlags ( attrID );
 		this->ClearAttrLink ( attrID );
 		return;
 	}
@@ -698,6 +717,7 @@ void MOAINode::SetAttrLink ( int attrID, MOAINode* srcNode, int srcAttrID ) {
 
 	link->mSourceNode = srcNode;
 	link->mSourceAttrID = srcAttrID;
+	link->Update ();
 	
 	this->ActivateOnLink ( *srcNode );
 }
@@ -720,6 +740,7 @@ void MOAINode::SetNodeLink ( MOAINode& srcNode ) {
 		
 		link->mNextInDest = this->mPullLinks;
 		this->mPullLinks = link;
+		link->Update ();
 		
 		this->ActivateOnLink ( srcNode );
 	}
